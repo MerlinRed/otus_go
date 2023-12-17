@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/wallclockbuilder/stringutil"
+)
+
 func main() {
-	// Place your code here.
+	fmt.Println(stringutil.Reverse("Hello, OTUS!"))
 }
