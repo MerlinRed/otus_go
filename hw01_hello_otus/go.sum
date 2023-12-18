@@ -1,0 +1,4 @@
+github.com/wallclockbuilder/stringutil v0.0.0-20151229105100-650d35b119a3 h1:nxWV9UNdGHW3OezVTq99ak99RvqMM+H+oG+aKNraxT4=
+github.com/wallclockbuilder/stringutil v0.0.0-20151229105100-650d35b119a3/go.mod h1:P0XJ0/hGOuePFbpFCHyzHMls2afcv32GHlmL/VuIpHg=
+github.com/wallclockbuilder/testify v0.0.0-20150512124233-dab07ac62d49 h1:2q+dCr8jqV705ORsqrqTATbsXAUQbYr6iSnPY7EVzWY=
+github.com/wallclockbuilder/testify v0.0.0-20150512124233-dab07ac62d49/go.mod h1:V6cqmxedb4antg+d148nk9PlC6ynVmZ6jNjHKNxlav8=
