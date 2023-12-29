@@ -10,17 +10,10 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func checkCornerCases(value string, packedString string, index int) (string, error) {
-	firstAlpha := packedString[0]
 	lastAlpha := packedString[len(packedString)-1]
 
 	if string(lastAlpha) == value {
 		if _, err := strconv.Atoi(string(packedString[index-1])); err == nil {
-			return "", ErrInvalidString
-		}
-	}
-
-	if string(firstAlpha) == value {
-		if _, err := strconv.Atoi(string(packedString[index+1])); err == nil {
 			return "", ErrInvalidString
 		}
 	}
@@ -43,6 +36,10 @@ func Unpack(packedString string) (string, error) {
 
 	if len(packedString) < 2 {
 		return packedString, nil
+	}
+
+	if _, err := strconv.Atoi(string(packedString[0])); err == nil {
+		return "", ErrInvalidString
 	}
 
 	var builder strings.Builder
