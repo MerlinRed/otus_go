@@ -5,75 +5,41 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 var ErrInvalidString = errors.New("invalid string")
 
-func checkCornerCases(value string, packedString string, index int) (string, error) {
-	lastAlpha := packedString[len(packedString)-1]
+func Unpack(packedString string) (string, error) {
+	packagedRune := []rune(packedString)
+	var newString string
 
-	if string(lastAlpha) == value {
-		if _, err := strconv.Atoi(string(packedString[index-1])); err == nil {
+	for index, value := range packagedRune {
+		if unicode.IsDigit(value) && index == 0 {
 			return "", ErrInvalidString
 		}
-	}
 
-	if _, err := strconv.Atoi(string(packedString[index+1])); err == nil {
-		return "", ErrInvalidString
-	}
-
-	if _, err := strconv.Atoi(string(packedString[index-1])); err == nil {
-		return "", ErrInvalidString
-	}
-
-	return value, nil
-}
-
-func Unpack(packedString string) (string, error) {
-	if len(packedString) == 0 {
-		return packedString, nil
-	}
-
-	if len(packedString) < 2 {
-		return packedString, nil
-	}
-
-	if _, err := strconv.Atoi(string(packedString[0])); err == nil {
-		return "", ErrInvalidString
-	}
-
-	var builder strings.Builder
-	var alpha string
-
-	for index, value := range strings.Split(packedString, "") {
-		if _, err := strconv.Atoi(value); err == nil {
-			if _, err := checkCornerCases(value, packedString, index); err != nil {
-				return "", err
-			}
+		if unicode.IsDigit(value) && unicode.IsDigit(packagedRune[index-1]) {
+			return "", ErrInvalidString
 		}
 
-		if digit, err := strconv.Atoi(value); err == nil && digit != 0 {
-			digit--
-			builder.WriteString(strings.Repeat(alpha, digit))
-			continue
-		}
+		if unicode.IsDigit(value) {
+			digit, _ := strconv.Atoi(string(value))
 
-		if num, e := strconv.Atoi(value); num == 0 && e == nil {
-			continue
-		}
-
-		lastAlpha := packedString[len(packedString)-1]
-		if string(lastAlpha) != value && string(lastAlpha) != "0" {
-			if beforeAlpha := packedString[index+1]; string(beforeAlpha) == "0" {
+			if digit == 0 {
+				newString = newString[:len(newString)-1]
 				continue
 			}
+
+			digit--
+			newString += strings.Repeat(string(packagedRune[index-1]), digit)
+			continue
 		}
 
-		alpha = value
-		builder.WriteString(strings.Repeat(alpha, 1))
+		newString += string(value)
 	}
 
-	fmt.Println(builder.String())
+	fmt.Println(newString)
 
-	return builder.String(), nil
+	return newString, nil
 }
