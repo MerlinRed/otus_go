@@ -11,21 +11,21 @@ type Dictionary struct {
 }
 
 func counter(stringArray []string) map[string]int {
-	counter := make(map[string]int)
+	dict := make(map[string]int)
 	for _, word := range stringArray {
-		counter[word]++
+		dict[word]++
 	}
 
-	return counter
+	return dict
 }
 
 func groupByCount(counter map[string]int) map[int][]string {
-	intCounter := make(map[int][]string, len(counter))
+	dict := make(map[int][]string, len(counter))
 	for word, count := range counter {
-		intCounter[count] = append(intCounter[count], word)
+		dict[count] = append(dict[count], word)
 	}
 
-	return intCounter
+	return dict
 }
 
 func getSortedArrayDict(counter map[int][]string) []Dictionary {
@@ -44,13 +44,13 @@ func getMostCommonWords(arrayDict []Dictionary) []string {
 	var mostCommon []string
 	count := 0
 	for _, dict := range arrayDict {
+		sort.Strings(dict.Values)
+		mostCommon = append(mostCommon, dict.Values...)
+		count += len(dict.Values)
 		if count >= 10 {
+			mostCommon = mostCommon[:10]
 			break
 		}
-
-		sort.Strings(dict.Values)
-		count += len(dict.Values)
-		mostCommon = append(mostCommon, dict.Values...)
 	}
 
 	return mostCommon
