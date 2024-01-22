@@ -43,6 +43,15 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+var catsDogsAndMan = "cat and dog, one dog,two cats and one man"
+
+var warAndPeace = `Eh bien, mon prince. Gênes et Lucques ne sont plus que des apanages, 
+des поместья, de la famille Buonaparte. Non, je vous préviens que si vous ne me dites pas que nous avons 
+la guerre, si vous vous permettez encore de pallier toutes les infamies, toutes les atrocités de cet 
+Antichrist (ma parole, j'y crois) — je ne vous connais plus, vous n'êtes plus mon ami, 
+vous n'êtes plus мой верный раб, comme vous dites. Ну, здравствуйте, здравствуйте. 
+Je vois que je vous fais peur, садитесь и рассказывайте.`
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
@@ -78,5 +87,35 @@ func TestTop10(t *testing.T) {
 			}
 			require.Equal(t, expected, Top10(text))
 		}
+	})
+
+	t.Run("positive test", func(t *testing.T) {
+		expected := []string{
+			"and",     // 2
+			"one",     // 2
+			"cat",     // 1
+			"cats",    // 1
+			"dog,",    // 1
+			"dog,two", // 1
+			"man",     // 1
+		}
+		require.Equal(t, expected, Top10(catsDogsAndMan))
+	})
+
+	t.Run("positive test", func(t *testing.T) {
+		expected := []string{
+			"vous", // 9
+			"que",  // 4
+			"de",   // 3
+			"je",   // 3
+			"ne",   // 3
+			"plus", // 3
+			"des",  // 2
+			"la",   // 2
+			"les",  // 2
+			"mon",  // 2
+
+		}
+		require.Equal(t, expected, Top10(warAndPeace))
 	})
 }
