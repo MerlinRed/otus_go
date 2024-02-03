@@ -54,7 +54,6 @@ func (l *list) PushFront(v interface{}) *ListItem {
 		newNode.Next = l.head
 		l.head.Prev = newNode
 		l.head = newNode
-
 	}
 	l.len++
 
