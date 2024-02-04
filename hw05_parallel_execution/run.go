@@ -24,7 +24,8 @@ func Run(tasks []Task, n, m int) error {
 					return
 				}
 
-				if task() != nil {
+				err := task()
+				if err != nil {
 					atomic.AddInt32(&errorCount, 1)
 				}
 			}
