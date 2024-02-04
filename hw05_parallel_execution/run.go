@@ -19,17 +19,16 @@ func Run(tasks []Task, n, m int) error {
 	for i := 0; i < n; i++ {
 		wg.Add(1)
 		go func() {
+			defer wg.Done()
 			for task := range tasksChannel {
 				if int32(m) < atomic.LoadInt32(&errorCount) {
 					return
 				}
 
-				err := task()
-				if err != nil {
+				if task() != nil {
 					atomic.AddInt32(&errorCount, 1)
 				}
 			}
-			wg.Done()
 		}()
 	}
 
