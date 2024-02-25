@@ -33,7 +33,7 @@ func TestPipeline(t *testing.T) {
 		g("Dummy", func(v interface{}) interface{} { return v }),
 		g("Multiplier (* 2)", func(v interface{}) interface{} { return v.(int) * 2 }),
 		g("Adder (+ 100)", func(v interface{}) interface{} { return v.(int) + 100 }),
-		g("Divider (+ 100)", func(v interface{}) interface{} { return v.(int) / 2 }),
+		g("Divider (/ 2)", func(v interface{}) interface{} { return v.(int) / 2 }),
 		g("Stringifier", func(v interface{}) interface{} { return strconv.Itoa(v.(int)) }),
 	}
 
