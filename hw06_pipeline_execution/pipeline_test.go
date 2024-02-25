@@ -33,8 +33,28 @@ func TestPipeline(t *testing.T) {
 		g("Dummy", func(v interface{}) interface{} { return v }),
 		g("Multiplier (* 2)", func(v interface{}) interface{} { return v.(int) * 2 }),
 		g("Adder (+ 100)", func(v interface{}) interface{} { return v.(int) + 100 }),
+		g("Divider (+ 100)", func(v interface{}) interface{} { return v.(int) / 2 }),
 		g("Stringifier", func(v interface{}) interface{} { return strconv.Itoa(v.(int)) }),
 	}
+
+	t.Run("one value", func(t *testing.T) {
+		in := make(Bi)
+		data := []int{10}
+
+		go func() {
+			for _, v := range data {
+				in <- v
+			}
+			close(in)
+		}()
+
+		result := make([]string, 0, 10)
+		for s := range ExecutePipeline(in, nil, stages...) {
+			result = append(result, s.(string))
+		}
+		require.Equal(t, []string{"60"}, result)
+		require.Len(t, result, 1)
+	})
 
 	t.Run("simple case", func(t *testing.T) {
 		in := make(Bi)
@@ -54,7 +74,7 @@ func TestPipeline(t *testing.T) {
 		}
 		elapsed := time.Since(start)
 
-		require.Equal(t, []string{"102", "104", "106", "108", "110"}, result)
+		require.Equal(t, []string{"51", "52", "53", "54", "55"}, result)
 		require.Less(t,
 			int64(elapsed),
 			// ~0.8s for processing 5 values in 4 stages (100ms every) concurrently
