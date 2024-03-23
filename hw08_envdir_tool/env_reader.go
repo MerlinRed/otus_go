@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"os"
-	"strings"
+	"path/filepath"
 )
 
 type Environment map[string]EnvValue
@@ -26,22 +26,24 @@ func ReadDir(dir string) (Environment, error) {
 	envs := make(Environment)
 
 	for _, fileData := range files {
-		file, err := os.Open(dir + "/" + fileData.Name())
+		file, err := os.Open(filepath.Join(dir, fileData.Name()))
 		if err != nil {
 			return nil, err
 		}
-		defer file.Close()
 
 		scanner := bufio.NewScanner(file)
 		scanner.Scan()
-
-		env := string(bytes.ReplaceAll(scanner.Bytes(), []byte("\x00"), []byte("\n")))
-		fileName := strings.Split(file.Name(), "/")[3]
-
+		rowEnv := bytes.ReplaceAll(scanner.Bytes(), []byte("\x00"), []byte("\n"))
+		env := string(bytes.Trim(rowEnv, "\t"))
 		if env == "" || env == " " {
-			envs[fileName] = EnvValue{Value: "", NeedRemove: true}
-		} else {
-			envs[fileName] = EnvValue{Value: env, NeedRemove: false}
+			envs[fileData.Name()] = EnvValue{Value: "", NeedRemove: true}
+			continue
+		}
+
+		envs[fileData.Name()] = EnvValue{Value: env, NeedRemove: false}
+
+		if err = file.Close(); err != nil {
+			return nil, err
 		}
 	}
 
