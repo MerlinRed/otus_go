@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -102,7 +101,14 @@ func validateField(value string, fieldContains reflect.Value, fieldName string) 
 			preparedField = strconv.Itoa(int(fieldContains.Int()))
 		}
 
-		if !slices.Contains(validValues, preparedField) {
+		found := false
+		for i := range validValues {
+			if preparedField == validValues[i] {
+				found = true
+				break
+			}
+		}
+		if !found {
 			return ValidationError{Field: fieldName, Err: ErrorIn}
 		}
 	}
